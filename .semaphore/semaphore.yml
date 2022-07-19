@@ -5,27 +5,16 @@ agent:
     type: e1-standard-2
     os_image: ubuntu2004
 blocks:
-  - name: Install
+  - name: Test
     task:
       jobs:
-        - name: npm install
+        - name: Test
           commands:
             - checkout
             - sem-version node 12
             - cache restore
             - npm install
             - cache store
-  - name: Test
-    task:
-      env_vars:
-        - name: NODE_ENV
-          value: test
-      prologue:
-        commands:
-          - 'checkout '
-          - sem-version node 12
-          - cache restore
-      jobs:
-        - name: mocha
-          commands:
-            - node src/server.js & npm test
+            - npm run build --if-present
+            - 'node src/server.js & '
+            - npm test
